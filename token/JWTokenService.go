@@ -11,24 +11,24 @@ type JWTokenService struct {
   SignKey *rsa.PrivateKey
 }
 
-func NewJWTokenService (verKey *rsa.PublicKey, signKey *rsa.PrivateKey) {
+func NewJWTokenService (verKey *rsa.PublicKey, signKey *rsa.PrivateKey) *JWTokenService {
   return &JWTokenService{
     VerifyKey:verKey,
     SignKey:signKey,
   }
 }
 
-func (j *JWTokenService) Create(expiration time.Duration) (*jwt.Token, error) {
+func (j *JWTokenService) Create(expiration time.Duration) (string, *jwt.Token, error) {
   token := jwt.New(jwt.GetSigningMethod("RS256"))
-  token.Claims.(jwt.MapClaims)["exp"] = time.Now().Add(time.Hour * 24 * 5).Unix()
+  token.Claims.(jwt.MapClaims)["exp"] = time.Now().Add(expiration).Unix()
 
   //sign token
   tokenString, err := token.SignedString(j.SignKey)
-  if err == nil {
-    return nil, err
+  if err != nil {
+    return "", nil, err
   }
 
-  return tokenString, nil
+  return tokenString, token, nil
 }
 
 func (j *JWTokenService) Parse(tokenString string) (*jwt.Token, error) {
