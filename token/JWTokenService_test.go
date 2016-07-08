@@ -11,7 +11,7 @@ import (
   "fmt"
 )
 
-func initRSAKeys() (error, *rsa.PublicKey, *rsa.PrivateKey) {
+func initRSAKeys() (*rsa.PublicKey, *rsa.PrivateKey, error) {
   signBytes, err := ioutil.ReadFile("../certificates/app.rsa")
   if err != nil {
     return err, nil, nil
@@ -40,7 +40,7 @@ type JWTokenServiceSuite struct {
 }
 
 func (s *JWTokenServiceSuite) SetupSuite() {
-  err, verifyKey, signKey := initRSAKeys()
+  verifyKey, signKey, err := initRSAKeys()
   if err != nil {
     panic(err)
   }

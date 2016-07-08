@@ -5,7 +5,8 @@ import (
   "github.com/dgrijalva/jwt-go"
 )
 
-type TokenService interface {
+// Service is the interface of tokenService implementation
+type Service interface {
   Create(expiration time.Duration) (string, error)
   Parse(tokenString string) (*jwt.Token, error)
   Validate(tokenString string) bool
