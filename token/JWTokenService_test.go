@@ -8,7 +8,6 @@ import (
   "crypto/rsa"
   "time"
   "github.com/stretchr/testify/assert"
-  "fmt"
 )
 
 func initRSAKeys() (*rsa.PublicKey, *rsa.PrivateKey, error) {
@@ -68,7 +67,6 @@ func (s *JWTokenServiceSuite) TestParse() {
   }
 
   parsedToken, err := s.service.Parse(tokenString)
-  fmt.Printf("%T %T", token.Claims.(jwt.MapClaims)["exp"], parsedToken.Claims.(jwt.MapClaims)["exp"])
   assert.Equal(s.T(), (float64)(token.Claims.(jwt.MapClaims)["exp"].(int64)), parsedToken.Claims.(jwt.MapClaims)["exp"].(float64))
 }
 
