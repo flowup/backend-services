@@ -11,25 +11,25 @@ import (
 )
 
 func initRSAKeys() (*rsa.PublicKey, *rsa.PrivateKey, error) {
-  signBytes, err := ioutil.ReadFile("../certificates/app.rsa")
+  signBytes, err := ioutil.ReadFile("test_fixture/app.rsa")
   if err != nil {
-    return err, nil, nil
+    return nil, nil, err
   }
   signKey, err := jwt.ParseRSAPrivateKeyFromPEM(signBytes)
   if err != nil {
-    return err, nil, nil
+    return nil, nil, err
   }
-  verifyBytes, err := ioutil.ReadFile("../certificates/app.rsa.pub")
+  verifyBytes, err := ioutil.ReadFile("test_fixture/app.rsa.pub")
   if err != nil {
-    return err, nil, nil
+    return nil, nil, err
   }
 
   verifyKey, err := jwt.ParseRSAPublicKeyFromPEM(verifyBytes)
   if err != nil {
-    return err, nil, nil
+    return nil, nil, err
   }
 
-  return nil, verifyKey, signKey
+  return verifyKey, signKey, nil
 }
 
 type JWTokenServiceSuite struct {
@@ -57,7 +57,6 @@ func (s *JWTokenServiceSuite) TestCreate() {
   }
   assert.NotEqual(s.T(), "", tokenString)
   assert.NotEqual(s.T(), (*jwt.Token)(nil), token)
-  //assert.Equal(s.T(), (float64)(3600), token.Claims.(jwt.MapClaims)["exp"].(float64))
 }
 
 func (s *JWTokenServiceSuite) TestParse() {
