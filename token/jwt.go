@@ -4,6 +4,7 @@ import (
   "time"
   "github.com/dgrijalva/jwt-go"
   "crypto/rsa"
+  "errors"
 )
 
 // JWTokenService is implementation of TokenService
@@ -22,17 +23,59 @@ func NewJWTokenService (verKey *rsa.PublicKey, signKey *rsa.PrivateKey) *JWToken
 }
 
 // Create will create a token with duration given by parameter
-func (j *JWTokenService) Create(expiration time.Duration) (string, *jwt.Token, error) {
+func (j *JWTokenService) Create(expiration time.Duration) (string, error) {
   token := jwt.New(jwt.GetSigningMethod("RS256"))
   token.Claims.(jwt.MapClaims)["exp"] = time.Now().Add(expiration).Unix()
 
   //sign token
   tokenString, err := token.SignedString(j.SignKey)
   if err != nil {
-    return "", nil, err
+    return "", err
   }
 
-  return tokenString, token, nil
+  return tokenString, nil
+}
+
+// SetClaimValue will set a value of a claim of token
+// all given by parameter if an error occurs it is returned
+// if not new token is returned in form of a string
+func (j *JWTokenService) SetClaimValue(tokenString string, key string, value interface{}) (string, error) {
+  token, err := j.Parse(tokenString)
+  if err != nil {
+    return "", err
+  }
+
+  if !token.Valid {
+    return "", errors.New("Token not valid")
+  }
+  token.Claims.(jwt.MapClaims)[key] = value
+
+  newString, err := token.SignedString(j.SignKey)
+  if err != nil {
+    return "", err
+  }
+
+  return newString, nil
+}
+
+// GetClaimValue will return a value of a claim
+// if an error occurs it is returned
+// if not, value of a claim is returned
+func (j *JWTokenService) GetClaimValue(tokenString string, key string) (interface{}, error) {
+  token, err := j.Parse(tokenString)
+  if err != nil {
+    return nil, err
+  }
+
+  if !token.Valid {
+    return nil, errors.New("Token not valid")
+  }
+
+  value, found := token.Claims.(jwt.MapClaims)[key]
+  if !found {
+    return nil, errors.New("Claim not found")
+  }
+  return value, nil
 }
 
 // Parse will parse the token from string given
