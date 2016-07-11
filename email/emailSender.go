@@ -1,7 +1,7 @@
-package emailSender
+package email
 
 // Service is an interface for implementations
 // of email sending services
-type Service interface {
+type Sender interface {
   Send(to []string, body []byte)
 }

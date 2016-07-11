@@ -1,4 +1,4 @@
-package emailSender
+package email
 
 import (
   "net/smtp"
