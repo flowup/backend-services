@@ -39,8 +39,10 @@ func (s *ZipServiceSuite) TestCompressDecompressFile() {
 
 //TestCompressDecompress testing basic compressing of bytes coming from io.Reader
 func (s *ZipServiceSuite) TestCompressDecompress() {
+	const testString = "Hello World"
+
 	//	Source buffer simulating data in io.Reader
-	content := bytes.NewBuffer([]byte("Hello World"))
+	content := bytes.NewBuffer([]byte(testString))
 
 	//	Two buffers. One for output of zipping func and second for output of unzipping
 	compressed := bytes.NewBuffer(nil)
@@ -51,7 +53,7 @@ func (s *ZipServiceSuite) TestCompressDecompress() {
 	s.service.Decompress(compressed, decompressed)
 
 	//	Testing if testing string is the same as before zipping
-	assert.Equal(s.T(), "Hello World", string(decompressed.Bytes()))
+	assert.Equal(s.T(), testString, string(decompressed.Bytes()))
 }
 
 //TestZipServiceSuite is func that starts testing
