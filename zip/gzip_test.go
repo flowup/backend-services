@@ -10,20 +10,20 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type ZipServiceSuite struct {
+type GzipSuite struct {
 	suite.Suite
-	service *ZipService
+	service *Gzip
 }
 
 //SetupTest
-func (s *ZipServiceSuite) SetupTest() {
-	s.service = NewZipService()
+func (s *GzipSuite) SetupTest() {
+	s.service = NewGzip()
 	assert.NotEqual(s.T(), nil, s.service)
 }
 
 /*TestCompressDecompressFile is testing funcs CompressFile and DecompressFile
 it takes file test.txt from test_fixtures and zips and after unzips it. */
-func (s *ZipServiceSuite) TestCompressDecompressFile() {
+func (s *GzipSuite) TestCompressDecompressFile() {
 
 	s.service.CompressFile("test_fixtures/test.txt", "test_fixtures")
 	s.service.DecompressFile("test_fixtures/test.gz", "/tmp")
@@ -38,7 +38,7 @@ func (s *ZipServiceSuite) TestCompressDecompressFile() {
 }
 
 //TestCompressDecompress testing basic compressing of bytes coming from io.Reader
-func (s *ZipServiceSuite) TestCompressDecompress() {
+func (s *GzipSuite) TestCompressDecompress() {
 	const testString = "Hello World"
 
 	//	Source buffer simulating data in io.Reader
@@ -56,7 +56,7 @@ func (s *ZipServiceSuite) TestCompressDecompress() {
 	assert.Equal(s.T(), testString, string(decompressed.Bytes()))
 }
 
-//TestZipServiceSuite is func that starts testing
-func TestZipServiceSuite(t *testing.T) {
-	suite.Run(t, &ZipServiceSuite{})
+//TestGzipSuite is func that starts testing
+func TestGzipSuite(t *testing.T) {
+	suite.Run(t, &GzipSuite{})
 }

@@ -11,18 +11,18 @@ import (
 	"github.com/klauspost/compress/gzip"
 )
 
-//ZipService is a struct
-type ZipService struct {
+//Gzip is a struct
+type Gzip struct {
 }
 
-// NewZipService is a constructor creating new ZipService
-func NewZipService() *ZipService {
-	return &ZipService{}
+// NewGzip is a constructor creating new Gzip
+func NewGzip() *Gzip {
+	return &Gzip{}
 }
 
 /*CompressFile is compresing func that compress file. It will cut off extension
 and zips the file using "github.com/klauspost/compress/gzip" zipping functions */
-func (s *ZipService) CompressFile(source, target string) ([]byte, error) {
+func (s *Gzip) CompressFile(source, target string) ([]byte, error) {
 
 	//	Reading file and error handle
 	reader, err := os.Open(source)
@@ -50,7 +50,7 @@ func (s *ZipService) CompressFile(source, target string) ([]byte, error) {
 }
 
 //DecompressFile is func decompressing zipped files.
-func (s *ZipService) DecompressFile(source, target string) error {
+func (s *Gzip) DecompressFile(source, target string) error {
 
 	//	Reading file and error handle
 	reader, err := os.Open(source)
@@ -79,7 +79,7 @@ func (s *ZipService) DecompressFile(source, target string) error {
 }
 
 //Compress is compresing data from io.Reader and sending them to io.Writer
-func (s *ZipService) Compress(reader io.Reader, writer io.Writer) error {
+func (s *Gzip) Compress(reader io.Reader, writer io.Writer) error {
 
 	archiver := gzip.NewWriter(writer)
 	defer archiver.Close()
@@ -89,7 +89,7 @@ func (s *ZipService) Compress(reader io.Reader, writer io.Writer) error {
 }
 
 //Decompress is compresing data from  and sending them to io.Writer
-func (s *ZipService) Decompress(reader io.Reader, writer io.Writer) error {
+func (s *Gzip) Decompress(reader io.Reader, writer io.Writer) error {
 
 	archive, err := gzip.NewReader(reader)
 	if err != nil {
