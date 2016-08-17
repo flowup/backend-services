@@ -2,16 +2,16 @@ package encrypt
 
 import "golang.org/x/crypto/bcrypt"
 
-//Bcrypt is a struct
+// Bcrypt is a type for BcryptService
 type Bcrypt struct {
 }
 
-//NewBcrypt is a constructor creating new Bcrypt
+// NewBcrypt is a constructor creating new Bcrypt
 func NewBcrypt() *Bcrypt {
 	return &Bcrypt{}
 }
 
-// Encrypt is encrypting passwords with bcrypt
+// Encrypt is encrypting passwords with bcrypt and returns hash that was created
 func (s *Bcrypt) Encrypt(password string) string {
 
 	// Password hashing with defaultCost of hashing set to be 10
@@ -19,16 +19,11 @@ func (s *Bcrypt) Encrypt(password string) string {
 	if err != nil {
 		panic(err)
 	}
-	/*
-		// Comparing the password with the hash
-		err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
-		fmt.Println(err) // nil means it is a match
-	*/
 	return string(hashedPassword)
 }
 
-// Check is comparing non-crypted passwords with encrypted ones
-// It returns true is plaintext password is similiar to hashed password
+/*Check is comparing non-crypted passwords with encrypted ones.
+It returns true is plaintext password is similiar to hashed password*/
 func (s *Bcrypt) Check(hashedPassword, password string) bool {
 
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
