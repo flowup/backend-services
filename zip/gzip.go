@@ -11,7 +11,7 @@ import (
 	"github.com/klauspost/compress/gzip"
 )
 
-//Gzip is a struct
+// Gzip is type a for Gzip service
 type Gzip struct {
 }
 

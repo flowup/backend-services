@@ -10,19 +10,21 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+// GzipSuite is defing suite and service Gzip is included
 type GzipSuite struct {
 	suite.Suite
 	service *Gzip
 }
 
-//SetupTest
+// SetupTest is testing if new service is created correctly
 func (s *GzipSuite) SetupTest() {
 	s.service = NewGzip()
 	assert.NotEqual(s.T(), nil, s.service)
 }
 
 /*TestCompressDecompressFile is testing funcs CompressFile and DecompressFile
-it takes file test.txt from test_fixtures and zips and after unzips it. */
+it takes file test.txt from test_fixtures and zips and after unzips it and checks
+if strings are still the same */
 func (s *GzipSuite) TestCompressDecompressFile() {
 
 	s.service.CompressFile("test_fixtures/test.txt", "test_fixtures")
@@ -37,7 +39,8 @@ func (s *GzipSuite) TestCompressDecompressFile() {
 	assert.Equal(s.T(), "Test string! \n", string(dat))
 }
 
-//TestCompressDecompress testing basic compressing of bytes coming from io.Reader
+/*TestCompressDecompress testing basic compressing and decompressing of bytes coming from io.Reader
+io.Reader and io.Writer are simulated as a buffers*/
 func (s *GzipSuite) TestCompressDecompress() {
 	const testString = "Hello World"
 
