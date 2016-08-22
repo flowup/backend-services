@@ -5,4 +5,5 @@ type TimeTrackingService interface {
 	StatNew() *Event
 	Start(e *Event)
 	Stop(e *Event)
+	Total(e *Event) int64
 }
