@@ -22,9 +22,9 @@ func (s *Bcrypt) Encrypt(password string) string {
 	return string(hashedPassword)
 }
 
-/*Check is comparing non-crypted passwords with encrypted ones.
+/*Validate is comparing non-crypted passwords with encrypted ones.
 It returns true is plaintext password is similiar to hashed password*/
-func (s *Bcrypt) Check(hashedPassword, password string) bool {
+func (s *Bcrypt) Validate(hashedPassword, password string) bool {
 
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 

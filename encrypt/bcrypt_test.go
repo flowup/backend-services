@@ -36,7 +36,7 @@ func (s *BcryptSuite) TestEncryptDecryptCorrect() {
 
 	for _, testPassword := range testingPasswords {
 		hash := service.Encrypt(testPassword)
-		assert.Equal(s.T(), true, service.Check(hash, testPassword))
+		assert.Equal(s.T(), true, service.Validate(hash, testPassword))
 	}
 
 }
@@ -47,7 +47,7 @@ func (s *BcryptSuite) TestEncryptDecryptIncorrect() {
 
 	for _, testPassword := range testingPasswords {
 		hash := service.Encrypt(testPassword)
-		assert.NotEqual(s.T(), true, service.Check(hash, wrongPassword))
+		assert.NotEqual(s.T(), true, service.Validate(hash, wrongPassword))
 	}
 
 }
