@@ -31,9 +31,9 @@ func NewGrid(dao fileDao) *Grid {
 // Upload will save given file to server and return its metadata
 func (g *Grid) Upload(file io.ReadWriter, name string) *Meta {
 	// Create unique name of file
-	now := time.Now().Unix()
+	now := time.Now()
 	h := sha1.New()
-	io.WriteString(h, strconv.FormatInt(now, 10))
+	io.WriteString(h, strconv.FormatInt(int64(now.Second()), 10)+strconv.FormatInt(int64(now.Nanosecond()), 10))
 	fname := fmt.Sprintf("%x", h.Sum(nil))
 
 	// Get extension of file
