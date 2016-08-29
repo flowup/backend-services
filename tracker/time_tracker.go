@@ -1,7 +1,7 @@
-package timeTracker
+package tracker
 
-//TimeTrackingService is an interface for Bcrypt encryption and validation
-type TimeTrackingService interface {
+//Tracker is an interface for Bcrypt encryption and validation
+type Tracker interface {
 	StatNew() *Event
 	Start(e *Event)
 	Stop(e *Event)

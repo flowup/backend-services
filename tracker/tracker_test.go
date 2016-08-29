@@ -1,4 +1,4 @@
-package timeTracker
+package tracker
 
 import (
 	"testing"
