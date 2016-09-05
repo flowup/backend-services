@@ -28,6 +28,11 @@ func NewGrid(dao fileDao) *Grid {
 	return &Grid{dao}
 }
 
+type MetaData struct {
+	Meta *Meta
+	Size int64
+}
+
 // Upload will save given file to server and return its metadata
 func (g *Grid) Upload(file io.ReadWriter, name string) *Meta {
 	// Create unique name of file
@@ -74,8 +79,10 @@ func (g *Grid) Download(id uint) *os.File {
 }
 
 // GetMeta will return metadata of file from server
-func (g *Grid) GetMeta(id uint) *Meta {
-	return g.dao.ReadByID(id)
+func (g *Grid) GetMeta(id uint) MetaData {
+	meta := g.dao.ReadByID(id)
+	fi, _ := os.Stat(meta.URL)
+	return MetaData{Meta: meta, Size: fi.Size()}
 }
 
 // Delete will remove data from server
