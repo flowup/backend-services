@@ -8,6 +8,7 @@ import (
 type Meta struct {
 	gorm.Model
 	Name string
+	Hash string
 	URL  string
 	Type string
 }

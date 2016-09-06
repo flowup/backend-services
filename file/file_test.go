@@ -44,6 +44,17 @@ func (d *MockDao) DeleteByID(id uint) {
 	}
 }
 
+// ReadByHash will return metadata of file by given ID
+func (d *MockDao) ReadByHash(hash string) []Meta {
+	meta := []Meta{}
+	for _, v := range d.meta {
+		if v.Hash == hash {
+			meta = append(meta, v)
+		}
+	}
+	return meta
+}
+
 // Read will return all metadata
 func (d *MockDao) Read(m *Meta) []Meta {
 	return d.meta
@@ -104,9 +115,11 @@ func (s *GridSuite) TestGetMeta() {
 	service := NewGrid(&MockDao{})
 
 	file, _ := os.Open("./test_fixtures/test_file_1.txt")
+	defer file.Close()
 	service.Upload(file, file.Name())
 
 	file, _ = os.Open("./test_fixtures/test_file_2.txt")
+	defer file.Close()
 	service.Upload(file, file.Name())
 
 	meta := service.GetMeta(1)
@@ -120,14 +133,56 @@ func (s *GridSuite) TestDelete() {
 	service := NewGrid(&MockDao{})
 
 	file, _ := os.Open("./test_fixtures/test_file_1.txt")
+	defer file.Close()
 	service.Upload(file, file.Name())
 
 	file, _ = os.Open("./test_fixtures/test_file_2.txt")
+	defer file.Close()
 	service.Upload(file, file.Name())
 
 	service.Delete(0)
 
 	assert.Equal(s.T(), 1, len(service.dao.Read(&Meta{})))
+}
+
+// TestGetMetaByHash tests if returned metadata are correct
+func (s *GridSuite) TestGetMetaByHash() {
+	service := NewGrid(&MockDao{})
+
+	file, _ := os.Open("./test_fixtures/test_file_1.txt")
+	defer file.Close()
+	service.Upload(file, file.Name())
+
+	file, _ = os.Open("./test_fixtures/test_file_2.txt")
+	defer file.Close()
+	hash := service.Upload(file, file.Name())
+
+	meta := service.GetMetaByHash(hash.Hash)
+
+	assert.Equal(s.T(), uint(1), meta.Meta.ID)
+	assert.Equal(s.T(), file.Name(), meta.Meta.Name)
+}
+
+// TestDownloadByHash tests if file is correctly downloaded
+func (s *GridSuite) TestDownloadByHash() {
+	service := NewGrid(&MockDao{})
+
+	f, _ := os.Open("./test_fixtures/test_file_1.txt")
+	defer f.Close()
+	hash := service.Upload(f, f.Name())
+
+	f.Seek(0, 0)
+	cmp2, _ := ioutil.ReadAll(f)
+
+	file, _ := os.Open("./test_fixtures/test_file_2.txt")
+	defer file.Close()
+	service.Upload(file, file.Name())
+
+	file = service.DownloadByHash(hash.Hash)
+
+	cmp1, _ := ioutil.ReadAll(file)
+
+	assert.Equal(s.T(), string(cmp2), string(cmp1))
 }
 
 // TearDownSuite will run cleanup uploads

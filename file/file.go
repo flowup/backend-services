@@ -21,6 +21,7 @@ type fileDao interface {
 	DeleteByID(id uint)
 	Create(m *Meta)
 	Read(m *Meta) []Meta
+	ReadByHash(hash string) []Meta
 }
 
 // NewGrid creates new Grid
@@ -28,6 +29,7 @@ func NewGrid(dao fileDao) *Grid {
 	return &Grid{dao}
 }
 
+// MetaData is type of returned metadata
 type MetaData struct {
 	Meta *Meta
 	Size int64
@@ -57,13 +59,13 @@ func (g *Grid) Upload(file io.ReadWriter, name string) *Meta {
 	}
 
 	// Add metadata to database
-	meta := &Meta{Name: name, URL: out.Name(), Type: fext}
+	meta := &Meta{Name: name, URL: out.Name(), Type: fext, Hash: fname}
 	g.dao.Create(meta)
 
 	return meta
 }
 
-// Download will return file from server by given metadata of this file
+// Download will return file from server
 func (g *Grid) Download(id uint) *os.File {
 	meta := g.dao.ReadByID(id)
 
@@ -90,4 +92,23 @@ func (g *Grid) Delete(id uint) {
 	m := g.dao.ReadByID(id)
 	os.Remove(m.URL)
 	g.dao.DeleteByID(id)
+}
+
+// GetMetaByHash will return metadata of file from server by given hash string
+func (g *Grid) GetMetaByHash(hash string) MetaData {
+	meta := g.dao.ReadByHash(hash)[0]
+	fi, _ := os.Stat(meta.URL)
+	return MetaData{Meta: &meta, Size: fi.Size()}
+}
+
+// DownloadByHash will return file from server by given hash string
+func (g *Grid) DownloadByHash(hash string) *os.File {
+	meta := g.dao.ReadByHash(hash)[0]
+
+	file, err := os.Open(meta.URL)
+	if err != nil {
+		return nil
+	}
+
+	return file
 }
