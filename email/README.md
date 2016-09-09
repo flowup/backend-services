@@ -20,16 +20,5 @@ First config file needs to be set that means that you have to fill email.SMTPCon
 
 Email `SENDING` is than very simple: 
     
-    err = c.email.Send([]string{"exampleDestination@example.com"}, []byte("Your email message")) 
-
-## Tests
-
-All tests can be executed by running: 
-
-    goconvey 
-
-in the folder with test file, alternatively you can use command: 
-
-    go test
-
-## License
+    err = email.Send([]string{"exampleDestination@example.com"}, []byte("Your email message")) 
+    

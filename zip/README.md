@@ -17,19 +17,6 @@ The code below shows operations you can do with events:
 
 In addition there are added functions for zipping and decompressing files:
 
-    zip.service.CompressFile("path_to_the_file", "destination_folder")
+    zip.CompressFile("path_to_the_file", "destination_folder")
     
     zip.DecompressFile("path_to_the_file", "destination_folder")
-    
-
-## Tests
-
-All tests can be executed by running: 
-
-    goconvey 
-
-in the folder with test file, alternatively you can use command: 
-
-    go test
-
-## License

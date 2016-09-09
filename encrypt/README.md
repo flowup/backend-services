@@ -17,17 +17,5 @@ Following part of code is showing how you can import and use Encrypt service in 
  If you than have a password that is hashed via Encrypting service or with Bcrypt itself you are able to compare that password with its possible plain-text form:
 
     if encrypt.Check(hashedPassword, password){
-        // True if matches
+        //True if matches
     } 
-
-## Tests
-
-All tests can be executed by running: 
-
-    goconvey 
-
-in the folder with test file, alternatively you can use command: 
-	
-    go test
-
-## License
