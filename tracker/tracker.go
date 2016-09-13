@@ -18,8 +18,8 @@ type Event struct {
 	periods []Interval
 }
 
-// Tracker is a type for TrackerService
-type Tracker struct {
+// TimeTracker is a type for TrackerService
+type TimeTracker struct {
 	ID int64
 }
 
@@ -29,13 +29,13 @@ type Interval struct {
 	end   time.Time
 }
 
-// NewTracker is a constructor creating new Tracker
-func NewTracker() *Tracker {
-	return &Tracker{ID: 1}
+// NewTimeTracker is a constructor creating new TimeTracker
+func NewTimeTracker() *TimeTracker {
+	return &TimeTracker{ID: 1}
 }
 
 // StartNew is creating new Event. It is addding first interval to the array of periods of intervals.
-func (s *Tracker) StartNew() *Event {
+func (s *TimeTracker) StartNew() *Event {
 
 	interval := Interval{start: time.Now()}
 	event := Event{id: s.ID, periods: []Interval{interval}}
@@ -44,7 +44,7 @@ func (s *Tracker) StartNew() *Event {
 }
 
 // Start is taking existing event and adds a new interval to it.
-func (s *Tracker) Start(e *Event) error {
+func (s *TimeTracker) Start(e *Event) error {
 
 	if e == nil {
 		return ErrorNil
@@ -59,7 +59,7 @@ func (s *Tracker) Start(e *Event) error {
 }
 
 // Stop is stopping events
-func (s *Tracker) Stop(e *Event) error {
+func (s *TimeTracker) Stop(e *Event) error {
 
 	if e == nil {
 		return ErrorNil
@@ -79,7 +79,7 @@ func (s *Tracker) Stop(e *Event) error {
 }
 
 // Total is summing all the events
-func (s *Tracker) Total(e *Event) int64 {
+func (s *TimeTracker) Total(e *Event) int64 {
 	var duration int64
 	for _, interval := range e.periods {
 		if interval.end.IsZero() == true {

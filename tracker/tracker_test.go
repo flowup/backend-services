@@ -9,44 +9,44 @@ import (
 )
 
 // BcryptSuite defines suite
-type TrackerSuite struct {
+type TimeTrackerSuite struct {
 	suite.Suite
-	service *Tracker
+	service *TimeTracker
 }
 
 // TestNewBcrypt tests if Bcrypt service is created correctly
-func (s *TrackerSuite) SetupTest() {
-	s.service = NewTracker()
+func (s *TimeTrackerSuite) SetupTest() {
+	s.service = NewTimeTracker()
 	assert.NotEqual(s.T(), nil, s.service)
 }
 
 // Testing StartingNewEvent if Event is created correctly
-func (s *TrackerSuite) TestStartNewEvent() {
+func (s *TimeTrackerSuite) TestStartNewEvent() {
 
 	event := s.service.StartNew()
 	assert.NotEqual(s.T(), nil, event)
 }
 
 // TestStopNil tests if user is not able to put nil event to the Stop() function.
-func (s *TrackerSuite) TestStopNil() {
+func (s *TimeTrackerSuite) TestStopNil() {
 
 	assert.Equal(s.T(), ErrorNil, s.service.Stop(nil))
 }
 
 // TestStartNil tests if user is not able to put nil event to the Start() function.
-func (s *TrackerSuite) TestStartNil() {
+func (s *TimeTrackerSuite) TestStartNil() {
 
 	assert.Equal(s.T(), ErrorNil, s.service.Start(nil))
 }
 
 // TestStartNotStopped tests if user is not able to start existing event if this event was not stopped before
-func (s *TrackerSuite) TestStartNotStopped() {
+func (s *TimeTrackerSuite) TestStartNotStopped() {
 
 	event := s.service.StartNew()
 	assert.Equal(s.T(), ErrorStart, s.service.Start(event))
 }
 
-func (s *TrackerSuite) TestTotalCalc() {
+func (s *TimeTrackerSuite) TestTotalCalc() {
 
 	event := s.service.StartNew()
 	time.Sleep(3 * time.Second)
@@ -69,7 +69,7 @@ func (s *TrackerSuite) TestTotalCalc() {
 	assert.Equal(s.T(), 8, int(period.Seconds()))
 }
 
-//	Passing of our suite (TrackerSuite) to suite.Run to be able to run the tests
-func TestTrackerSuite(t *testing.T) {
-	suite.Run(t, &TrackerSuite{})
+//	Passing of our suite (TimeTrackerSuite) to suite.Run to be able to run the tests
+func TestTimeTrackerSuite(t *testing.T) {
+	suite.Run(t, &TimeTrackerSuite{})
 }

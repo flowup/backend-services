@@ -1,6 +1,6 @@
 package tracker
 
-//Tracker is an interface for Bcrypt encryption and validation
+//Tracker is an interface for time tracking service
 type Tracker interface {
 	StatNew() *Event
 	Start(e *Event)
