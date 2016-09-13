@@ -4,6 +4,7 @@ import (
   "github.com/stretchr/testify/suite"
   "github.com/stretchr/testify/assert"
   "testing"
+  "os"
 )
 
 type ManagerSuite struct {
@@ -13,7 +14,8 @@ type ManagerSuite struct {
 }
 
 func (s *ManagerSuite)SetupSuite() {
-  s.testFile = "/run/media/walter/Data/Work/Go/src/flowdock.eu/services/filecache/test_fixtures/template_test"
+  s.testFile = os.Getenv("GOPATH") +
+    "/src/flowdock.eu/flowup/services/filecache/test_fixtures/template_test"
 }
 
 func (s *ManagerSuite) TestCachingTemplates(){
