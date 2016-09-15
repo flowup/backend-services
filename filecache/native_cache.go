@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"path/filepath"
 )
 
 // instance of a cache
@@ -24,6 +25,13 @@ func init() {
 // LoadFileNoCache will load a template and NOT save it in
 // cache.
 func (m *NativeCache) LoadFileNoCache(path string) []byte {
+	var err error
+	if !filepath.IsAbs(path) {
+		path, err = filepath.Abs(path)
+		if err != nil {
+			panic(err)
+		}
+	}
 	if runtime.GOOS == "windows" {
 		path = strings.Replace(path, "/", "\\", -1)
 	}
