@@ -36,7 +36,7 @@ type MetaData struct {
 }
 
 // Upload will save given file to server and return its metadata
-func (g *Grid) Upload(file io.ReadWriter, name string) *Meta {
+func (g *Grid) Upload(file io.Reader, name string) *Meta {
 	// Create unique name of file
 	now := time.Now()
 	h := sha1.New()

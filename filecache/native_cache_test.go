@@ -1,29 +1,29 @@
 package filecache
 
 import (
-  "github.com/stretchr/testify/suite"
-  "github.com/stretchr/testify/assert"
-  "testing"
-  "os"
+	"os"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 )
 
 type ManagerSuite struct {
-  suite.Suite
+	suite.Suite
 
-  testFile string
+	testFile string
 }
 
-func (s *ManagerSuite)SetupSuite() {
-  s.testFile = os.Getenv("GOPATH") +
-    "/src/flowdock.eu/flowup/services/filecache/test_fixtures/template_test"
+func (s *ManagerSuite) SetupSuite() {
+	s.testFile = os.Getenv("GOPATH") +
+		"/src/github.com/flowup/backend-services/filecache/test_fixtures/template_test"
 }
 
-func (s *ManagerSuite) TestCachingTemplates(){
-  readData := Cache.LoadFile(s.testFile)
-  assert.Equal(s.T(), "THIS IS A TEST TEMPLATE\n", string(readData))
+func (s *ManagerSuite) TestCachingTemplates() {
+	readData := Cache.LoadFile(s.testFile)
+	assert.Equal(s.T(), "THIS IS A TEST TEMPLATE\n", string(readData))
 }
 
 func TestManagerSuite(t *testing.T) {
-  suite.Run(t, &ManagerSuite{})
+	suite.Run(t, &ManagerSuite{})
 }
-
