@@ -1,0 +1,24 @@
+hash: 6f9df35578e8d653bd6f61e492b1f83f9a1a1b024d21cc8213774a2dd9f362c2
+updated: 2016-10-12T12:52:33.84451817+02:00
+imports:
+- name: github.com/dgrijalva/jwt-go
+  version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
+- name: github.com/jinzhu/gorm
+  version: 5174cc5c242a728b435ea2be8a2f7f998e15429b
+- name: github.com/jinzhu/inflection
+  version: 74387dc39a75e970e7a3ae6a3386b5bd2e5c5cff
+- name: github.com/klauspost/compress
+  version: 006acde2c5d283d2f8b8aa03d8f0cd2891c680cf
+  subpackages:
+  - flate
+  - gzip
+- name: github.com/klauspost/cpuid
+  version: 09cded8978dc9e80714c4d85b0322337b0a1e5e0
+- name: github.com/klauspost/crc32
+  version: 19b0b332c9e4516a6370a0456e6182c3b5036720
+- name: golang.org/x/crypto
+  version: 4cd25d65a015cc83d41bf3454e6e8d6c116d16da
+  subpackages:
+  - bcrypt
+  - blowfish
+testImports: []
