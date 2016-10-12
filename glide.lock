@@ -1,5 +1,5 @@
-hash: 6f9df35578e8d653bd6f61e492b1f83f9a1a1b024d21cc8213774a2dd9f362c2
-updated: 2016-10-12T12:52:33.84451817+02:00
+hash: 64e1d7fc2d9704f14c794bab5b8df556f54118d024c1ff75ac1a3af212a882e6
+updated: 2016-10-12T13:33:41.792953095+02:00
 imports:
 - name: github.com/dgrijalva/jwt-go
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
@@ -21,4 +21,18 @@ imports:
   subpackages:
   - bcrypt
   - blowfish
-testImports: []
+testImports:
+- name: github.com/davecgh/go-spew
+  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
+  subpackages:
+  - spew
+- name: github.com/pmezard/go-difflib
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  subpackages:
+  - difflib
+- name: github.com/stretchr/testify
+  version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
+  subpackages:
+  - assert
+  - require
+  - suite

@@ -29,14 +29,18 @@ build:
     # Install dependencies using glide
     - glide-install
 
+    - script:
+        name: glide update --all-dependencies
+        code: glide update --all-dependencies
+
     # Build the project
     - script:
         name: go build
         code: |
-          go build
+          go build ./...
 
     # Test the project
     - script:
         name: go test
         code: |
-          go test
+          go test ./...
