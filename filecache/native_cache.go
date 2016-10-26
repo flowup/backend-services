@@ -22,17 +22,26 @@ func init() {
 	}
 }
 
+// getAbsolutePath is auxiliary function that will transform
+// any relative path to absolute path. If such transformation
+// is not possible, panic occurs
+func getAbsolutePath(path string) string{
+  var err error
+  if !filepath.IsAbs(path) {
+    path, err = filepath.Abs(path)
+    if err != nil {
+      panic(err)
+    }
+  }
+  return path
+}
+
 // LoadFileNoCache will load a template and NOT save it in
 // cache.
 func (m *NativeCache) LoadFileNoCache(path string) []byte {
-	var err error
-	if !filepath.IsAbs(path) {
-		path, err = filepath.Abs(path)
-		if err != nil {
-			panic(err)
-		}
-	}
-	if runtime.GOOS == "windows" {
+	path = getAbsolutePath(path)
+
+  if runtime.GOOS == "windows" {
 		path = strings.Replace(path, "/", "\\", -1)
 	}
 	file, err := os.Open(path)
@@ -52,16 +61,27 @@ func (m *NativeCache) LoadFileNoCache(path string) []byte {
 // without any further ado, if it is not, it will load it,
 // save it to cache and return it.
 func (m *NativeCache) LoadFile(path string) []byte {
-	if bytes, ok := m.loadedTemplates[path]; ok == true {
+  path = getAbsolutePath(path)
+
+  if bytes, ok := m.loadedTemplates[path]; ok == true {
 		return bytes
 	}
 	m.loadedTemplates[path] = m.LoadFileNoCache(path)
 	return m.loadedTemplates[path]
 }
 
-// UpdateTemplate is updating existing template in map of templates
-func (m *NativeCache) UpdateTemplate(path string) []byte {
+// UpdateFile is updating existing template in map of templates
+func (m *NativeCache) UpdateFile(path string) []byte {
+  path = getAbsolutePath(path)
 
-	m.loadedTemplates[path] = m.LoadFileNoCache(path)
+  m.loadedTemplates[path] = m.LoadFileNoCache(path)
 	return m.loadedTemplates[path]
+}
+
+// IsFileInCache will return true if file is in cache, false otherwise
+func (m *NativeCache) IsFileInCache(path string) bool {
+  path = getAbsolutePath(path)
+
+  _, ok := m.loadedTemplates[path]
+  return ok
 }

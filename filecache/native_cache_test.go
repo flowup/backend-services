@@ -48,7 +48,7 @@ func (s *ManagerSuite) TestUpdatingTemplates() {
 	assert.NotEqual(s.T(), "UPDATED TEST TEMPLATE!\n", string(readData))
 
 	// Testing of update function
-	readData = Cache.UpdateTemplate(s.testFile)
+	readData = Cache.UpdateFile(s.testFile)
 	fmt.Println(string(readData))
 	assert.Equal(s.T(), "UPDATED TEST TEMPLATE!\n", string(readData))
 
