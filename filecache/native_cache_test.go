@@ -18,9 +18,9 @@ type ManagerSuite struct {
 
 func (s *ManagerSuite) SetupSuite() {
   s.testFile = os.Getenv("GOPATH") +
-    "/src/flowdock.eu/flowup/services/filecache/test_fixtures/template_test"
+    "/src/github.com/flowup/backend-services/filecache/test_fixtures/template_test"
   s.testFileUpdated = os.Getenv("GOPATH") +
-    "/src/flowdock.eu/flowup/services/filecache/test_fixtures/template_test_updated"
+    "/src/github.com/flowup/backend-services/filecache/test_fixtures/template_test_updated"
 }
 
 func (s *ManagerSuite) TestCachingTemplates() {
