@@ -41,7 +41,7 @@ func (m *MockSender) GetNumSentEmails() int {
 // GetEmailOnIndex will return nth sent email, n is sent by parameter
 // it may return error if index is out of range
 func (m *MockSender) GetEmailOnIndex(n int) (Record, error) {
-	if n < m.GetNumSentEmails() {
+	if n >= m.GetNumSentEmails() {
 		return Record{}, errors.New("Index out of range")
 	}
 
