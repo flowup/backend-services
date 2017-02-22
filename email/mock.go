@@ -25,12 +25,10 @@ func NewMockSender() *MockSender {
 
 // Send will mock sending of an email by recording it in the
 // MockSender structure
-func (m *MockSender) Send(to []string, body []byte) error {
+func (m *MockSender) Send(to []string, body []byte) {
 	m.Used = true
 	rec := Record{To: to, Body: body}
 	m.Emails = append(m.Emails, rec)
-
-	return nil
 }
 
 // GetNumSentEmails will return number of sent emails
