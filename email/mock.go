@@ -11,6 +11,7 @@ type Record struct {
 type MockSender struct {
 	Emails            chan Record
 	maxRecordedEmails int
+
 }
 
 // NewMockSender is a factory method for MockSender
