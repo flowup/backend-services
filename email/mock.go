@@ -9,13 +9,7 @@ type Record struct {
 // MockSender mocks sender implementation and records all Emails
 // sent
 type MockSender struct {
-<<<<<<< HEAD
 	Emails chan Record
-=======
-	Emails            chan Record
-	maxRecordedEmails int
-
->>>>>>> 0058bdb83826f991fc52e591708bebbfe662ae1f
 }
 
 // NewMockSender is a factory method for MockSender
