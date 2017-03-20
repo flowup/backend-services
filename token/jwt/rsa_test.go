@@ -32,25 +32,25 @@ func initRSAKeys() (*rsa.PublicKey, *rsa.PrivateKey, error) {
   return verifyKey, signKey, nil
 }
 
-type JWTokenServiceSuite struct {
+type JWTokenServiceRSASuite struct {
   suite.Suite
 
-  service   *JWTokenService
+  service   *RSAService
 }
 
-func (s *JWTokenServiceSuite) SetupSuite() {
+func (s *JWTokenServiceRSASuite) SetupSuite() {
   verifyKey, signKey, err := initRSAKeys()
   if err != nil {
     panic(err)
   }
-  s.service = NewJWTokenService(verifyKey, signKey)
+  s.service = NewRSAService(verifyKey, signKey)
 }
 
-func TestJWTokenSuite (t *testing.T) {
-  suite.Run(t, &JWTokenServiceSuite{})
+func TestJWTokenServiceRSASuite (t *testing.T) {
+  suite.Run(t, &JWTokenServiceRSASuite{})
 }
 
-func (s *JWTokenServiceSuite) TestCreate() {
+func (s *JWTokenServiceRSASuite) TestCreate() {
   tokenString, err := s.service.Create(time.Hour)
   if err != nil {
     panic(err)
@@ -59,55 +59,55 @@ func (s *JWTokenServiceSuite) TestCreate() {
   //assert.NotEqual(s.T(), (*jwt.Token)(nil), token)
 }
 
-func (s *JWTokenServiceSuite) TestSetClaimValue() {
+func (s *JWTokenServiceRSASuite) TestSetClaimValue() {
   tokenString, err := s.service.Create(time.Hour)
   if err != nil {
     panic(err)
   }
 
   tokenString, err = s.service.SetClaimValue(tokenString, "testclaim", "testval")
-  token, err := s.service.Parse(tokenString)
+  token, err := s.service.parse(tokenString)
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), "testval", token.Claims.(jwt.MapClaims)["testclaim"].(string))
 
   tokenString, err = s.service.SetClaimValue(tokenString, "testint", 42)
-  token, err = s.service.Parse(tokenString)
+  token, err = s.service.parse(tokenString)
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), float64(42), token.Claims.(jwt.MapClaims)["testint"].(float64))
 
   tokenString, err = s.service.SetClaimValue(tokenString, "testfloat", 42.5)
-  token, err = s.service.Parse(tokenString)
+  token, err = s.service.parse(tokenString)
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), float64(42.5), token.Claims.(jwt.MapClaims)["testfloat"].(float64))
 }
 
-func (s *JWTokenServiceSuite) TestGetClaimValue() {
+func (s *JWTokenServiceRSASuite) TestGetClaimValue() {
   tokenString, err := s.service.Create(time.Hour)
   if err != nil {
     panic(err)
   }
 
-  token, err := s.service.Parse(tokenString)
+  token, err := s.service.parse(tokenString)
   token.Claims.(jwt.MapClaims)["teststring"] = "test"
-  tokenString, err = token.SignedString(s.service.SignKey)
+  tokenString, err = token.SignedString(s.service.signKey)
   assert.Equal(s.T(), nil, err)
 
   val, err := s.service.GetClaimValue(tokenString, "teststring")
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), "test", (val).(string))
 
-  token, err = s.service.Parse(tokenString)
+  token, err = s.service.parse(tokenString)
   token.Claims.(jwt.MapClaims)["testint"] = 20
-  tokenString, err = token.SignedString(s.service.SignKey)
+  tokenString, err = token.SignedString(s.service.signKey)
   assert.Equal(s.T(), nil, err)
 
   val, err = s.service.GetClaimValue(tokenString, "testint")
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), float64(20), (val).(float64))
 
-  token, err = s.service.Parse(tokenString)
+  token, err = s.service.parse(tokenString)
   token.Claims.(jwt.MapClaims)["testfloat"] = 42.5
-  tokenString, err = token.SignedString(s.service.SignKey)
+  tokenString, err = token.SignedString(s.service.signKey)
   assert.Equal(s.T(), nil, err)
 
   val, err = s.service.GetClaimValue(tokenString, "testfloat")
@@ -115,18 +115,18 @@ func (s *JWTokenServiceSuite) TestGetClaimValue() {
   assert.Equal(s.T(), 42.5, (val).(float64))
 }
 
-func (s *JWTokenServiceSuite) TestParse() {
+func (s *JWTokenServiceRSASuite) TestParse() {
   tokenString, err := s.service.Create(time.Hour)
   if err != nil {
     panic(err)
   }
 
-  parsedToken, err := s.service.Parse(tokenString)
+  parsedToken, err := s.service.parse(tokenString)
   assert.Equal(s.T(), true, parsedToken.Valid)
   //assert.Equal(s.T(), (float64)(token.Claims.(jwt.MapClaims)["exp"].(int64)), parsedToken.Claims.(jwt.MapClaims)["exp"].(float64))
 }
 
-func (s *JWTokenServiceSuite) TestValidate() {
+func (s *JWTokenServiceRSASuite) TestValidate() {
   tokenString, err := s.service.Create(time.Hour)
   if err != nil {
     panic(err)
