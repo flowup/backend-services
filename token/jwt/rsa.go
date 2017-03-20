@@ -8,23 +8,23 @@ import (
   "fmt"
 )
 
-// JWTTokenServiceRSA is implementation of TokenService
+// RSAService is implementation of TokenService
 // using jwt-go library
-type JWTTokenServiceRSA struct {
+type RSAService struct {
   verifyKey *rsa.PublicKey
   signKey   *rsa.PrivateKey
 }
 
-// NewJWTokenServiceRSA is a factory method for JWTTokenServiceRSA
-func NewJWTokenServiceRSA(verKey *rsa.PublicKey, signKey *rsa.PrivateKey) *JWTTokenServiceRSA {
-  return &JWTTokenServiceRSA{
+// NewRSAService is a factory method for RSAService
+func NewRSAService(verKey *rsa.PublicKey, signKey *rsa.PrivateKey) *RSAService {
+  return &RSAService{
     verifyKey: verKey,
     signKey:   signKey,
   }
 }
 
 // Create will create a token with duration given by parameter
-func (j *JWTTokenServiceRSA) Create(expiration time.Duration) (string, error) {
+func (j *RSAService) Create(expiration time.Duration) (string, error) {
   token := jwt.New(jwt.GetSigningMethod("RS256"))
   token.Claims.(jwt.MapClaims)["exp"] = time.Now().Add(expiration).Unix()
 
@@ -40,8 +40,8 @@ func (j *JWTTokenServiceRSA) Create(expiration time.Duration) (string, error) {
 // SetClaimValue will set a value of a claim of token
 // all given by parameter if an error occurs it is returned
 // if not new token is returned in form of a string
-func (j *JWTTokenServiceRSA) SetClaimValue(tokenString string, key string, value interface{}) (string, error) {
-  token, err := j.Parse(tokenString)
+func (j *RSAService) SetClaimValue(tokenString string, key string, value interface{}) (string, error) {
+  token, err := j.parse(tokenString)
   if err != nil {
     return "", err
   }
@@ -62,8 +62,8 @@ func (j *JWTTokenServiceRSA) SetClaimValue(tokenString string, key string, value
 // GetClaimValue will return a value of a claim
 // if an error occurs it is returned
 // if not, value of a claim is returned
-func (j *JWTTokenServiceRSA) GetClaimValue(tokenString string, key string) (interface{}, error) {
-  token, err := j.Parse(tokenString)
+func (j *RSAService) GetClaimValue(tokenString string, key string) (interface{}, error) {
+  token, err := j.parse(tokenString)
   if err != nil {
     return nil, err
   }
@@ -81,13 +81,13 @@ func (j *JWTTokenServiceRSA) GetClaimValue(tokenString string, key string) (inte
 
 // Parse will parse the token from string given
 // by parameter and return it
-func (j *JWTTokenServiceRSA) Parse(tokenString string) (*jwt.Token, error) {
+func (j *RSAService) parse(tokenString string) (*jwt.Token, error) {
   return jwt.Parse(tokenString, j.getKeyFunc)
 }
 
 // Validate will check if token given by parameter
 // is valid
-func (j *JWTTokenServiceRSA) Validate(tokenString string) bool {
+func (j *RSAService) Validate(tokenString string) bool {
   reqToken, err := jwt.Parse(tokenString, j.getKeyFunc)
   if err != nil || !reqToken.Valid {
     return false
@@ -95,7 +95,7 @@ func (j *JWTTokenServiceRSA) Validate(tokenString string) bool {
   return true
 }
 
-func (j *JWTTokenServiceRSA) getKeyFunc(token *jwt.Token) (interface{}, error) {
+func (j *RSAService) getKeyFunc(token *jwt.Token) (interface{}, error) {
   if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
     return nil, fmt.Errorf("Unexpected signing method, got: %v expected RS256", token.Header["alg"])
   }

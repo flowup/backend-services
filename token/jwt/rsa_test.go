@@ -35,7 +35,7 @@ func initRSAKeys() (*rsa.PublicKey, *rsa.PrivateKey, error) {
 type JWTokenServiceRSASuite struct {
   suite.Suite
 
-  service   *JWTTokenServiceRSA
+  service   *RSAService
 }
 
 func (s *JWTokenServiceRSASuite) SetupSuite() {
@@ -43,7 +43,7 @@ func (s *JWTokenServiceRSASuite) SetupSuite() {
   if err != nil {
     panic(err)
   }
-  s.service = NewJWTokenServiceRSA(verifyKey, signKey)
+  s.service = NewRSAService(verifyKey, signKey)
 }
 
 func TestJWTokenServiceRSASuite (t *testing.T) {
@@ -66,17 +66,17 @@ func (s *JWTokenServiceRSASuite) TestSetClaimValue() {
   }
 
   tokenString, err = s.service.SetClaimValue(tokenString, "testclaim", "testval")
-  token, err := s.service.Parse(tokenString)
+  token, err := s.service.parse(tokenString)
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), "testval", token.Claims.(jwt.MapClaims)["testclaim"].(string))
 
   tokenString, err = s.service.SetClaimValue(tokenString, "testint", 42)
-  token, err = s.service.Parse(tokenString)
+  token, err = s.service.parse(tokenString)
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), float64(42), token.Claims.(jwt.MapClaims)["testint"].(float64))
 
   tokenString, err = s.service.SetClaimValue(tokenString, "testfloat", 42.5)
-  token, err = s.service.Parse(tokenString)
+  token, err = s.service.parse(tokenString)
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), float64(42.5), token.Claims.(jwt.MapClaims)["testfloat"].(float64))
 }
@@ -87,7 +87,7 @@ func (s *JWTokenServiceRSASuite) TestGetClaimValue() {
     panic(err)
   }
 
-  token, err := s.service.Parse(tokenString)
+  token, err := s.service.parse(tokenString)
   token.Claims.(jwt.MapClaims)["teststring"] = "test"
   tokenString, err = token.SignedString(s.service.signKey)
   assert.Equal(s.T(), nil, err)
@@ -96,7 +96,7 @@ func (s *JWTokenServiceRSASuite) TestGetClaimValue() {
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), "test", (val).(string))
 
-  token, err = s.service.Parse(tokenString)
+  token, err = s.service.parse(tokenString)
   token.Claims.(jwt.MapClaims)["testint"] = 20
   tokenString, err = token.SignedString(s.service.signKey)
   assert.Equal(s.T(), nil, err)
@@ -105,7 +105,7 @@ func (s *JWTokenServiceRSASuite) TestGetClaimValue() {
   assert.Equal(s.T(), nil, err)
   assert.Equal(s.T(), float64(20), (val).(float64))
 
-  token, err = s.service.Parse(tokenString)
+  token, err = s.service.parse(tokenString)
   token.Claims.(jwt.MapClaims)["testfloat"] = 42.5
   tokenString, err = token.SignedString(s.service.signKey)
   assert.Equal(s.T(), nil, err)
@@ -121,7 +121,7 @@ func (s *JWTokenServiceRSASuite) TestParse() {
     panic(err)
   }
 
-  parsedToken, err := s.service.Parse(tokenString)
+  parsedToken, err := s.service.parse(tokenString)
   assert.Equal(s.T(), true, parsedToken.Valid)
   //assert.Equal(s.T(), (float64)(token.Claims.(jwt.MapClaims)["exp"].(int64)), parsedToken.Claims.(jwt.MapClaims)["exp"].(float64))
 }

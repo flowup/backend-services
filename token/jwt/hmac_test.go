@@ -16,12 +16,12 @@ type JWTokenServiceHMACSuite struct {
 
 	secret []byte
 
-	service   *JWTTokenServiceHMAC
+	service   *HMACService
 }
 
 func (s *JWTokenServiceHMACSuite) SetupSuite() {
 	s.secret = []byte(testSecret)
-	s.service = NewJWTTokenServiceHMAC(s.secret)
+	s.service = NewHMACService(s.secret)
 }
 
 func TestJWTokenServiceHMACSuite (t *testing.T) {
@@ -44,17 +44,17 @@ func (s *JWTokenServiceHMACSuite) TestSetClaimValue() {
 	}
 
 	tokenString, err = s.service.SetClaimValue(tokenString, "testclaim", "testval")
-	token, err := s.service.Parse(tokenString)
+	token, err := s.service.parse(tokenString)
 	assert.Equal(s.T(), nil, err)
 	assert.Equal(s.T(), "testval", token.Claims.(jwt.MapClaims)["testclaim"].(string))
 
 	tokenString, err = s.service.SetClaimValue(tokenString, "testint", 42)
-	token, err = s.service.Parse(tokenString)
+	token, err = s.service.parse(tokenString)
 	assert.Equal(s.T(), nil, err)
 	assert.Equal(s.T(), float64(42), token.Claims.(jwt.MapClaims)["testint"].(float64))
 
 	tokenString, err = s.service.SetClaimValue(tokenString, "testfloat", 42.5)
-	token, err = s.service.Parse(tokenString)
+	token, err = s.service.parse(tokenString)
 	assert.Equal(s.T(), nil, err)
 	assert.Equal(s.T(), float64(42.5), token.Claims.(jwt.MapClaims)["testfloat"].(float64))
 }
@@ -65,7 +65,7 @@ func (s *JWTokenServiceHMACSuite) TestGetClaimValue() {
 		panic(err)
 	}
 
-	token, err := s.service.Parse(tokenString)
+	token, err := s.service.parse(tokenString)
 	token.Claims.(jwt.MapClaims)["teststring"] = "test"
 	tokenString, err = token.SignedString(s.secret)
 	assert.Equal(s.T(), nil, err)
@@ -74,7 +74,7 @@ func (s *JWTokenServiceHMACSuite) TestGetClaimValue() {
 	assert.Equal(s.T(), nil, err)
 	assert.Equal(s.T(), "test", (val).(string))
 
-	token, err = s.service.Parse(tokenString)
+	token, err = s.service.parse(tokenString)
 	token.Claims.(jwt.MapClaims)["testint"] = 20
 	tokenString, err = token.SignedString(s.secret)
 	assert.Equal(s.T(), nil, err)
@@ -83,7 +83,7 @@ func (s *JWTokenServiceHMACSuite) TestGetClaimValue() {
 	assert.Equal(s.T(), nil, err)
 	assert.Equal(s.T(), float64(20), (val).(float64))
 
-	token, err = s.service.Parse(tokenString)
+	token, err = s.service.parse(tokenString)
 	token.Claims.(jwt.MapClaims)["testfloat"] = 42.5
 	tokenString, err = token.SignedString(s.secret)
 	assert.Equal(s.T(), nil, err)
@@ -99,7 +99,7 @@ func (s *JWTokenServiceHMACSuite) TestParse() {
 		panic(err)
 	}
 
-	parsedToken, err := s.service.Parse(tokenString)
+	parsedToken, err := s.service.parse(tokenString)
 	assert.Equal(s.T(), true, parsedToken.Valid)
 	//assert.Equal(s.T(), (float64)(token.Claims.(jwt.MapClaims)["exp"].(int64)), parsedToken.Claims.(jwt.MapClaims)["exp"].(float64))
 }

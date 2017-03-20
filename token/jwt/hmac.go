@@ -7,19 +7,19 @@ import (
 	"errors"
 )
 
-type JWTTokenServiceHMAC struct {
+type HMACService struct {
 	secret []byte
 }
 
 
-func NewJWTTokenServiceHMAC(secret []byte) *JWTTokenServiceHMAC{
-	return &JWTTokenServiceHMAC{
+func NewHMACService(secret []byte) *HMACService {
+	return &HMACService{
 		secret: secret,
 	}
 }
 
 
-func (j *JWTTokenServiceHMAC) Create(expiration time.Duration) (string, error) {
+func (j *HMACService) Create(expiration time.Duration) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"exp": time.Now().Add(expiration).Unix(),
 	})
@@ -33,7 +33,7 @@ func (j *JWTTokenServiceHMAC) Create(expiration time.Duration) (string, error) {
 }
 
 
-func (j *JWTTokenServiceHMAC) Validate(tokenString string) bool {
+func (j *HMACService) Validate(tokenString string) bool {
 	t, err := jwt.Parse(tokenString, j.getSecretFunc)
 	if err != nil || !t.Valid {
 		return false
@@ -42,8 +42,8 @@ func (j *JWTTokenServiceHMAC) Validate(tokenString string) bool {
 }
 
 
-func (j *JWTTokenServiceHMAC) SetClaimValue(tokenString string, key string, value interface{}) (string, error) {
-	token, err := j.Parse(tokenString)
+func (j *HMACService) SetClaimValue(tokenString string, key string, value interface{}) (string, error) {
+	token, err := j.parse(tokenString)
 	if err != nil {
 		return "", err
 	}
@@ -62,8 +62,8 @@ func (j *JWTTokenServiceHMAC) SetClaimValue(tokenString string, key string, valu
 }
 
 
-func (j *JWTTokenServiceHMAC) GetClaimValue(tokenString string, key string) (interface{}, error) {
-	token, err := j.Parse(tokenString)
+func (j *HMACService) GetClaimValue(tokenString string, key string) (interface{}, error) {
+	token, err := j.parse(tokenString)
 	if err != nil {
 		return nil, err
 	}
@@ -80,11 +80,11 @@ func (j *JWTTokenServiceHMAC) GetClaimValue(tokenString string, key string) (int
 }
 
 
-func (j *JWTTokenServiceHMAC) Parse(tokenString string) (*jwt.Token, error) {
+func (j *HMACService) parse(tokenString string) (*jwt.Token, error) {
 	return jwt.Parse(tokenString, j.getSecretFunc)
 }
 
-func(j *JWTTokenServiceHMAC) getSecretFunc (token *jwt.Token) (interface{}, error) {
+func(j *HMACService) getSecretFunc (token *jwt.Token) (interface{}, error) {
 	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 		return nil, fmt.Errorf("Unexpected signing method, got: %v expected HS256", token.Header["alg"])
 	}
